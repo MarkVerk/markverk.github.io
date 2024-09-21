@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Chess Tool</title>
+        <link rel="stylesheet" href="style.css"
+    </head>
+    <body>
+        <div class="tournament_parameters">
+            <select name="tournament_type" id="tournament_type">
+                <option value="swiss">Швейцарская система</option>
+                <option value="arena">Арена</option>
+                <option value="knock_out">Нокаут-система</option>
+            </select>
+            <table border="2" id="players_table">
+                <caption>Игроки</caption>
+                <tr>
+                    <th>Имя<button onclick="newPlayer()" style="font-size: 20px; border: 0; outline: none; background-color:transparent">+</button></th>
+                    <th>Рейтинг</th>
+                </tr>
+            </table>
+            <button onclick="pairingResults()" class="submit_button">Готово</button>
+        </div>
+        <script src="script.js"></script>
+    </body>
+</html>
