@@ -1,22 +1,41 @@
-function pairingResults() {
-    type = document.getElementById('tournament_type');
-    var players = new Map();
-    const player_names = document.getElementsByName('player_name');
-    const player_ratings = document.getElementsByName('player_rating');
-    for (let i = 0; i < player_names.length; i++) {
-        if (players.has(player_names[i].value)) {
-            alert("Имена игроков не должны совпадать");
-            return;
+function hasDuplicates(players) {
+    let taken = new Set();
+    for (let i = 0; i < players.length; i++) {
+        if (taken.has(players[i].name)) {
+            return true;
         }
-        players.set(player_names[i].value, {rating: player_ratings[i].value, games: [], score: 0});
+        taken.add(players[i].name);
     }
-    if (players.size < 2) {
-        alert("Игроков должно быть не меньше 2");
+    return false;
+}
+
+function pairingResults() {
+    let players = [];
+    let player_names = document.getElementsByName('player_name');
+    let player_ratings = document.getElementsByName('player_rating');
+    let type = document.getElementById('tournament_type');
+    let round_count = document.getElementById('tour_count');
+    for (let i = 0; i < player_names.length; i++) {
+        players.push({name: player_names[i].value, rating: player_ratings[i].value});
+    }
+    if (players.length < 2) {
+        alert("Player count must be at least 2");
+        return;
+    }
+    if (hasDuplicates(players)) {
+        alert("Player names must be unique");
+        return;
+    }
+    if (round_count.value < 1) {
+        alert("Invalid round count");
         return;
     }
     localStorage.setItem("tournament_type", type.options[type.selectedIndex].value);
-    localStorage.setItem("players", JSON.stringify(Array.from(players)));
+    localStorage.setItem("players", JSON.stringify(players));
     localStorage.setItem("tour", "1");
+    localStorage.setItem("games", JSON.stringify([]));
+    localStorage.setItem("rounds", round_count.value);
+    localStorage.setItem("odds", JSON.stringify([]));
     location.href = "/pairing.html";
 }
 
