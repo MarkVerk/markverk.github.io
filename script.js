@@ -36,7 +36,20 @@ function pairingResults() {
     localStorage.setItem("games", JSON.stringify([]));
     localStorage.setItem("rounds", round_count.value);
     localStorage.setItem("odds", JSON.stringify([]));
-    location.href = "/pairing.html";
+    switch (type.options[type.selectedIndex].value) {
+        case 'swiss':
+            location.href = '/swiss.html';
+            break;
+        case 'arena':
+            location.href = '/arena.html';
+            break;
+        case 'knock-out':
+            location.href = '/knock-out';
+            break;
+        default:
+            alert('Invalid tournament type');
+            break;
+    }
 }
 
 function newPlayer() {

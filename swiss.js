@@ -34,16 +34,7 @@ for (const extra_point of odds) {
     scores.set(extra_point, scores.get(extra_point) + 1);
 }
 
-
-switch (type) {
-    case "swiss":
-        swiss();
-        break;
-    case "arena":
-        break;
-    case "knock-out":
-        break;
-}
+swiss();
 
 pairing.sort((a, b) => scores.get(b.white) - scores.get(a.white));
 for (const pair of pairing) {
@@ -64,7 +55,7 @@ function nextTour() {
     localStorage.setItem("games", JSON.stringify(games));
     localStorage.setItem("tour", tour.toString());
     localStorage.setItem("odds", JSON.stringify(odds));
-    if (tour == round_count) {
+    if (tour > round_count) {
         location.href = "/stats.html";
         return;
     }
