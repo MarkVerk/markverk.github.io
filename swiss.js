@@ -43,14 +43,24 @@ for (const pair of pairing) {
     newRow.insertCell().innerHTML = players.find((a) => a.name == pair.white).rating;
     newRow.insertCell().innerHTML = pair.black + "  (" + scores.get(pair.black) + ")";
     newRow.insertCell().innerHTML = players.find((a) => a.name == pair.black).rating;
-    newRow.insertCell().innerHTML = "<input name=\"game_result\"type=\"text\"></input>";
+    newRow.insertCell().innerHTML = `<select name="game_result">
+    <option value="">Не выбрано</option>
+    <option value="1-0">Победа белых</option>
+    <option value="0.5-0.5">Ничья</option>
+    <option value="0-1">Победа черных</option>
+    </select>`;
 }
 
 function nextTour() {
     tour++;
     const resultsHTML = document.getElementsByName('game_result');
     for (let i = 0; i < resultsHTML.length; i++) {
-        games.push({white: pairing[i].white, black: pairing[i].black, result: resultsHTML[i].value});
+        const selectedResult = resultsHTML[i].options[resultsHTML[i].selectedIndex].value;
+        if (selectedResult == "") {
+            alert("Указать все результаты");
+            return;
+        }
+        games.push({white: pairing[i].white, black: pairing[i].black, result: selectedResult});
     }
     localStorage.setItem("games", JSON.stringify(games));
     localStorage.setItem("tour", tour.toString());

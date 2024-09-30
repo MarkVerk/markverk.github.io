@@ -52,8 +52,13 @@ function pairingResults() {
     }
 }
 
+function removePlayer(that) {
+    that.parentNode.parentNode.remove();
+}
+
 function newPlayer() {
     const players_table = document.getElementById('players_table');
-    var row = players_table.insertRow();
-    row.innerHTML = "<tr><td><input type=\"text\" name=\"player_name\" style=\"border: 0; outline: none; font-size: 16px; width: 100%\"></td><td><input type=\"number\" name=\"player_rating\" style=\"border: 0; outline: none; font-size: 16px; width: 100%\"></td></tr>";
+    const row = players_table.insertRow();
+    row.insertCell().innerHTML = '<button onclick="removePlayer(this)" style="font-size: 20px; border: 0; outline: none; background-color:transparent">-</button><input name="player_name" type="text" style="font-size: 16px; border: 0; outline: none; width: 80%">';
+    row.insertCell().innerHTML = '<input name="player_rating" type="number" style="font-size: 16px; border: 0; outline: none; width: 100%">';
 }
