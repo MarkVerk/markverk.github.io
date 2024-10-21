@@ -8,14 +8,14 @@
     </head>
     <body>
         <div class="tournament_parameters">
-            <select name="tournament_type" id="tournament_type">
+            <select name="tournament_type" id="tournament_type" onselect="onTypeSelected(this)">
                 <option value="swiss">Швейцарская система</option>
                 <option value="arena">Арена</option>
                 <option value="knock_out">Нокаут-система</option>
             </select>
             <br>
-            <label for="tour_count">Раундов</label>
-            <input type="number" id="tour_count"></label>
+            <div class="specific" id="specific">
+            </div>
             <table border="2" id="players_table">
                 <caption>Игроки</caption>
                 <tr>
