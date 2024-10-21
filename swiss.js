@@ -51,9 +51,9 @@ for (const game of games) {
 }
 
 
-let odds = dutch();
-if (odds > 1) {
-    for (; odds > 0; odds--) {
+const unmatched = players.length - dutch().size * 2;
+if (unmatched > 1) {
+    for (let i = 0; i < unmatched; i++) {
         games.pop();
     }
     endTournament();
@@ -124,17 +124,14 @@ function dutch() {
             weights.push([p1, p2, weight]);
         }
     }
-    console.log(weights);
     const matching = blossom(weights, true);
     let matched = new Set();
-    let odds = 0;
     for (let i = 0; i < matching.length; i++) {
         if (matched.has(i)) {
             continue;
         }
         if (matching[i] == -1) {
             games.push({white: i, black: null, result: "bye"});
-            odds++;
             continue;
         }
         if (players[matching[i]].color_streak > players[i]) {
@@ -144,7 +141,7 @@ function dutch() {
         pairing.push({white: matching[i], black: i});
         matched.add(matching[i]);
     }
-    return odds;
+    return matched;
 }
 
 function endTournament() {
