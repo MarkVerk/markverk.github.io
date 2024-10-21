@@ -3,11 +3,11 @@ const games = JSON.parse(localStorage.getItem('games'));
 const last_round = Number(localStorage.getItem('round'));
 
 for (const player of players) {
-    player['total_opponent_rating'] = 0;
-    player['wins'] = 0;
-    player['losses'] = 0;
-    player['draws'] = 0;
-    player['byes'] = 0;
+    player.total_opponent_rating = 0;
+    player.wins = 0;
+    player.losses = 0;
+    player.draws = 0;
+    player.byes = 0;
 }
 
 
@@ -31,11 +31,11 @@ for (const game of games) {
             players[game.white].total_opponent_rating += players[game.black].rating;
             players[game.black].total_opponent_rating += players[game.white].rating;
             break;
-        case "1-":
+        case "bye":
             players[game.white].byes++;
             break;
-        case "-1":
-            players[game.black].byes++;
+        default:
+            alert('Invalid game');
             break;
     }
 }
