@@ -16,8 +16,31 @@ for (const player of players) {
     player.played_with = new Set();
 }
 
-
-for (const game of games) {
+for (const [i, game] of games.entries()) {
+    if (i > 0 && (i + 1) % Math.ceil(players.length / 2) == 0) { // round end
+        let round_table = `
+        <table border="2">
+            <caption><h1>Тур ${(i + 1) / Math.ceil(players.length / 2)}<h1></caption>
+            <tr>
+                <th>Белые</th>
+                <th>Рейтинг</th>
+                <th>Черные</th>
+                <th>Рейтинг</th>
+                <th>Результат</th>
+            </tr>\n`;
+        for (let j = i - Math.trunc(players.length / 2) + 1; j < i + 1; j++) { // Math.trunc to skip bye
+            round_table += `
+            <tr>
+                <td>${players[games[j].white].name} (${players[games[j].white].score})</td>
+                <td>${players[games[j].white].rating}</td>
+                <td>${players[games[j].black].name} (${players[games[j].black].score})</td>
+                <td>${players[games[j].black].rating}</td>
+                <td>${games[j].result}</td>
+            <tr>\n`;
+        }
+        round_table += `</table>\n<br>`;
+        document.getElementById('prev_rounds').innerHTML += round_table;
+    }
     if (game.result == "bye") {
         players[game.white].score++;
         continue;
@@ -76,7 +99,6 @@ for (const pair of pairing) {
 }
 
 function nextRound() {
-    round++;
     const resultsHTML = document.getElementsByName('game_result');
     for (let i = 0; i < resultsHTML.length; i++) {
         const selectedResult = resultsHTML[i].options[resultsHTML[i].selectedIndex].value;
@@ -86,6 +108,7 @@ function nextRound() {
         }
         games.push({white: pairing[i].white, black: pairing[i].black, result: selectedResult});
     }
+    round++;
     localStorage.setItem("games", JSON.stringify(games));
     localStorage.setItem("round", round.toString());
     location.reload();
