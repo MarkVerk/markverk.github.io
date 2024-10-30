@@ -7,9 +7,8 @@
         <title>Жеребьевка</title>
     </head>
     <body>
-        <div class="prev_rounds" id="prev_rounds">
+        <ul id="rounds"></ul>
         </div>
-        <br>
         <table border="2" id="players">
             <caption id="tour"></caption>
             <tr>
@@ -20,7 +19,7 @@
                 <th>Результат</th>
             </tr>
         </table>
-        <button onclick="nextRound()">Тур окончен</button>
+        <button onclick="nextRound()" id="next_round">Тур окончен</button>
         <button onclick="endTournament()" id="end_tournament">Закончить турнир</button>
         <script src="blossom.js"></script>
         <script src="swiss.js"></script>

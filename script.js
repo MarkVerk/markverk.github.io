@@ -48,17 +48,15 @@ function pairingResults() {
     }
     localStorage.setItem("tournament_type", type.options[type.selectedIndex].value);
     localStorage.setItem("players", JSON.stringify(players));
-    localStorage.setItem("round", "1");
     localStorage.setItem("games", JSON.stringify([]));
+    localStorage.setItem("round", JSON.stringify(1));
+    localStorage.setItem("status", "active");
     switch (type.options[type.selectedIndex].value) {
         case 'swiss':
-            location.href = '/swiss.html';
+            location.href = '/swiss.html?round=1';
             break;
         case 'arena':
             location.href = '/arena.html';
-            break;
-        case 'knock-out':
-            location.href = '/knock-out';
             break;
         default:
             alert('Invalid tournament type');

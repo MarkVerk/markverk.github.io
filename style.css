@@ -18,3 +18,14 @@ td, th {
   'GRAD' 0,
   'opsz' 24
 }
+
+#rounds {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+}
+
+#rounds li {
+  margin-right: 10px;
+}
