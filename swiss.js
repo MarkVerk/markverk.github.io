@@ -2,9 +2,11 @@ let players = JSON.parse(localStorage.getItem('players'));
 let games = JSON.parse(localStorage.getItem('games'));
 const params = new URLSearchParams(location.search);
 let round = params.get('round');
-let current_round = JSON.parse(localStorage.getItem('round'));
 const pairing_table = document.getElementById('players');
 
+if (!round) {
+    location.search = '?round=1';
+}
 
 if (round < 3) {
     document.getElementById('end_tournament').hidden = true;
@@ -14,7 +16,10 @@ let pairing = [];
 
 document.getElementById('tour').innerHTML = `<h1>Тур ${round}</h1>`;
 
-for (let i = 0; i < current_round; i++) {
+for (let i = 0; i < games.length + 1; i++) {
+    if (localStorage.getItem('status') == 'finished' && i == games.length) {
+        break;
+    }
     document.getElementById('rounds').innerHTML += `<li><a href="/swiss.html?round=${i + 1}"> ${i + 1} </a></li>\n`;
 }
 
@@ -59,7 +64,7 @@ for (let i = 0; i < round - 1; i++) {
     }
 }
 
-if (round < current_round) { // history
+if (round <= games.length || localStorage.getItem('status') == 'finished') { // history
     document.getElementById('end_tournament').hidden = true;
     document.getElementById('next_round').hidden = true;
     displayRound();
@@ -103,9 +108,7 @@ function nextRound() {
         games[round - 1].push({white: pairing[i].white, black: pairing[i].black, result: selectedResult.options[selectedResult.selectedIndex].value});
     }
     round++;
-    current_round++;
     localStorage.setItem('games', JSON.stringify(games));
-    localStorage.setItem('round', JSON.stringify(current_round));
     location.search = `?round=${round.toString()}`;
 }
 

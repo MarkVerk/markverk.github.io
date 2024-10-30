@@ -10,7 +10,7 @@ for (const player of players) {
     player.history = '';
 }
 
-    for (let i = 0; i < games.length; i++) {
+for (let i = 0; i < games.length; i++) {
     for (const game of games[i]) {
         switch (game.result) {
             case "1-0":
