@@ -22,7 +22,7 @@ document.getElementById('stats_link').href = `/stats.html?tournament=${tournamen
 document.getElementById('tour').innerHTML = `<h1>Тур ${round}</h1>`;
 
 for (let i = 0; i < games.length + 1; i++) {
-    if (localStorage.getItem('status') == 'finished' && i == games.length) {
+    if (tournaments[tournament].status == 'finished' && i == games.length) {
         break;
     }
     document.getElementById('rounds').innerHTML += `<li><a href="/swiss.html?tournament=${tournament_name}&round=${i + 1}"> ${i + 1} </a></li>\n`;
@@ -118,16 +118,25 @@ function nextRound() {
     location.search = `?tournament=${encodeURIComponent(tournament_name)}&round=${round.toString()}`;
 }
 
+function comparePairing(a, b) {
+    if (a.black == -1) {
+        return 1;
+    }
+    if (b.black == -1) {
+        return -1;
+    }
+    return players[b.white].score + players[b.black].score - players[a.white].score - players[a.black].score;
+}
 
 function pairPlayers() {
     const unmatched = players.length - dutch().size * 2;
     if (unmatched > 1) {
         tournaments[tournament].status = 'finished';
-        localStorage.setItem('tournaments', tournaments);
+        localStorage.setItem('tournaments', JSON.stringify(tournaments));
         location.href = `/stats.html?tournament=${encodeURIComponent(tournament_name)}`;
     }
     
-    pairing.sort((a, b) => players[b.white].score + players[b.black]?.score - players[a.white].score - players[a.black]?.score);
+    pairing.sort(comparePairing);
     for (const pair of pairing) {
         const newRow = pairing_table.insertRow();
         newRow.insertCell().innerHTML = players[pair.white].name + `  (${players[pair.white].score})`;
@@ -220,6 +229,6 @@ function endTournament() {
     }
     tournaments[tournament].games = games;
     tournaments[tournament].status = 'finished';
-    localStorage.setItem('tournaments', tournaments);
+    localStorage.setItem('tournaments', JSON.stringify(tournaments));
     location.href = `/stats.html?tournament=${encodeURIComponent(tournament_name)}`;
 }

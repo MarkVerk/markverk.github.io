@@ -47,7 +47,7 @@ function pairingResults() {
     }
     tournaments.push({players: players, games: [], status: 'active', name: document.getElementById('tournament_name').value});
     localStorage.setItem('tournaments', JSON.stringify(tournaments));
-    location.href = `/stats.html?tournament=${encodeURIComponent(document.getElementById('tournament_name').value)}`;
+    location.href = `/swiss.html?tournament=${encodeURIComponent(document.getElementById('tournament_name').value)}&round=1`;
 }
 
 function removePlayer(that) {
