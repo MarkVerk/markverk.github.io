@@ -1,4 +1,3 @@
-let players = [];
 let player_names = document.getElementsByName('player_name');
 let player_ratings = document.getElementsByName('player_rating');
 const tournament_list = document.getElementById('tournaments');
@@ -34,6 +33,7 @@ function hasDuplicates(players) {
 }
 
 function pairingResults() {
+    let players = [];
     for (let i = 0; i < player_names.length; i++) {
         players.push({name: player_names[i].value, rating: Number(player_ratings[i].value)});
     }
