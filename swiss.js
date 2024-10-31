@@ -1,11 +1,15 @@
-let players = JSON.parse(localStorage.getItem('players'));
-let games = JSON.parse(localStorage.getItem('games'));
 const params = new URLSearchParams(location.search);
 let round = params.get('round');
-const pairing_table = document.getElementById('players');
+const pairing_table = document.getElementById('pairing');
+const tournament_name = decodeURIComponent(params.get('tournament'));
+let tournaments = JSON.parse(localStorage.getItem('tournaments'));
+const tournament = tournaments.findIndex((a) => a.name == tournament_name);
+let games = tournaments[tournament].games;
+const players = tournaments[tournament].players;
+
 
 if (!round) {
-    location.search = '?round=1';
+    location.search = `?tournament=${encodeURIComponent(tournament_name)}&round=1`;
 }
 
 if (round < 3) {
@@ -14,13 +18,14 @@ if (round < 3) {
 
 let pairing = [];
 
+document.getElementById('stats_link').href = `/stats.html?tournament=${tournament_name}`;
 document.getElementById('tour').innerHTML = `<h1>Тур ${round}</h1>`;
 
 for (let i = 0; i < games.length + 1; i++) {
     if (localStorage.getItem('status') == 'finished' && i == games.length) {
         break;
     }
-    document.getElementById('rounds').innerHTML += `<li><a href="/swiss.html?round=${i + 1}"> ${i + 1} </a></li>\n`;
+    document.getElementById('rounds').innerHTML += `<li><a href="/swiss.html?tournament=${tournament_name}&round=${i + 1}"> ${i + 1} </a></li>\n`;
 }
 
 for (const player of players) {
@@ -64,7 +69,7 @@ for (let i = 0; i < round - 1; i++) {
     }
 }
 
-if (round <= games.length || localStorage.getItem('status') == 'finished') { // history
+if (round <= games.length || tournaments[tournament].status == 'finished') { // history
     document.getElementById('end_tournament').hidden = true;
     document.getElementById('next_round').hidden = true;
     displayRound();
@@ -108,16 +113,18 @@ function nextRound() {
         games[round - 1].push({white: pairing[i].white, black: pairing[i].black, result: selectedResult.options[selectedResult.selectedIndex].value});
     }
     round++;
-    localStorage.setItem('games', JSON.stringify(games));
-    location.search = `?round=${round.toString()}`;
+    tournaments[tournament].games = games;
+    localStorage.setItem('tournaments', JSON.stringify(tournaments));
+    location.search = `?tournament=${encodeURIComponent(tournament_name)}&round=${round.toString()}`;
 }
 
 
 function pairPlayers() {
     const unmatched = players.length - dutch().size * 2;
     if (unmatched > 1) {
-        localStorage.setItem('status', 'finished');
-        location.href = '/stats.html';
+        tournaments[tournament].status = 'finished';
+        localStorage.setItem('tournaments', tournaments);
+        location.href = `/stats.html?tournament=${encodeURIComponent(tournament_name)}`;
     }
     
     pairing.sort((a, b) => players[b.white].score + players[b.black]?.score - players[a.white].score - players[a.black]?.score);
@@ -211,7 +218,8 @@ function endTournament() {
         }
         games[round - 1].push({white: pairing[i].white, black: pairing[i].black, result: selectedResult.options[selectedResult.selectedIndex].value});
     }
-    localStorage.setItem('status', 'finished');
-    localStorage.setItem('games', JSON.stringify(games));
-    location.href = '/stats.html';
+    tournaments[tournament].games = games;
+    tournaments[tournament].status = 'finished';
+    localStorage.setItem('tournaments', tournaments);
+    location.href = `/stats.html?tournament=${encodeURIComponent(tournament_name)}`;
 }

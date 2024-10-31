@@ -7,14 +7,12 @@
         <link rel="stylesheet" href="style.css">
     </head>
     <body>
+        <ol id="tournaments">
+        </ol>
+        <br>
         <div class="tournament_parameters">
-            <select name="tournament_type" id="tournament_type" onselect="onTypeSelected(this)">
-                <option value="swiss">Швейцарская система</option>
-                <option value="arena">Арена</option>
-            </select>
-            <br>
-            <div class="specific" id="specific">
-            </div>
+            <label for="tournament_name">Название</label>
+            <input id="tournament_name" type="text"></input>
             <table border="2" id="players_table">
                 <caption>Игроки</caption>
                 <tr>

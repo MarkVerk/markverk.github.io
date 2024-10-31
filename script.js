@@ -1,26 +1,25 @@
 let players = [];
 let player_names = document.getElementsByName('player_name');
 let player_ratings = document.getElementsByName('player_rating');
-let type = document.getElementById('tournament_type');
-let specific = document.getElementById('specific');
+const tournament_list = document.getElementById('tournaments');
 
+let tournaments = JSON.parse(localStorage.getItem('tournaments'));
+if (tournaments == null) {
+    tournaments = [];
+}
 
-
-function onTypeSelected(that) {
-    switch (type.options[type.selectedIndex].value) {
-        case 'swiss':
-            specific.innerHTML = '';
-            break;
-        case 'arena':
-            specific.innerHTML = '';
-            break;
-        case 'knock-out':
-            specific.innerHTML = '';
-            break;
-        default:
-            alert('Invalid tournament type');
-            break;
-    }
+for (const tournament of tournaments) {
+    const li = document.createElement('li');
+    const remove_button = document.createElement('button');
+    remove_button.innerHTML = 'Удалить';
+    remove_button.addEventListener('click', function () {
+        tournaments.splice(tournaments.indexOf(tournament), 1);
+        localStorage.setItem('tournaments', JSON.stringify(tournaments));
+        li.remove();
+    });
+    li.innerHTML = `<a href="/stats.html?tournament=${encodeURIComponent(tournament.name)}">${tournament.name}</a>`;
+    li.appendChild(remove_button);
+    tournament_list.appendChild(li);
 }
 
 function hasDuplicates(players) {
@@ -39,29 +38,16 @@ function pairingResults() {
         players.push({name: player_names[i].value, rating: Number(player_ratings[i].value)});
     }
     if (players.length < 2) {
-        alert("Player count must be at least 2");
+        alert('Player count must be at least 2');
         return;
     }
     if (hasDuplicates(players)) {
-        alert("Player names must be unique");
+        alert('Player names must be unique');
         return;
     }
-    localStorage.setItem("tournament_type", type.options[type.selectedIndex].value);
-    localStorage.setItem("players", JSON.stringify(players));
-    localStorage.setItem("games", JSON.stringify([]));
-    localStorage.setItem("round", JSON.stringify(1));
-    localStorage.setItem("status", "active");
-    switch (type.options[type.selectedIndex].value) {
-        case 'swiss':
-            location.href = '/swiss.html?round=1';
-            break;
-        case 'arena':
-            location.href = '/arena.html';
-            break;
-        default:
-            alert('Invalid tournament type');
-            break;
-    }
+    tournaments.push({players: players, games: [], status: 'active', name: document.getElementById('tournament_name').value});
+    localStorage.setItem('tournaments', JSON.stringify(tournaments));
+    location.href = `/stats.html?tournament=${encodeURIComponent(document.getElementById('tournament_name').value)}`;
 }
 
 function removePlayer(that) {
