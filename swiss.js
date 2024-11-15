@@ -13,7 +13,7 @@ if (!round) {
 }
 
 if (round < 3) {
-    document.getElementById('end_tournament').hidden = true;
+    document.getElementById('end_tournament').disabled = true;
 }
 
 let pairing = [];
