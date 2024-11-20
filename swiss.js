@@ -129,13 +129,18 @@ function comparePairing(a, b) {
 }
 
 function pairPlayers() {
-    const unmatched = players.length - dutch().size * 2;
-    if (unmatched > 1) {
+    const matched = dutch();
+    if (players.length - matched.size > 1) {
         tournaments[tournament].status = 'finished';
         localStorage.setItem('tournaments', JSON.stringify(tournaments));
         location.href = `/stats.html?tournament=${encodeURIComponent(tournament_name)}`;
     }
-    
+    for (let i = 0; i < players.length; i++) {
+        if (matched.has(i)) {
+            continue;
+        }
+        pairing.push({white: i, black: -1});
+    }
     pairing.sort(comparePairing);
     for (const pair of pairing) {
         const newRow = pairing_table.insertRow();
@@ -192,6 +197,7 @@ function dutch() {
             weights.push([p1, p2, weight]);
         }
     }
+    console.log(weights);
     const matching = blossom(weights, true);
     let matched = new Set();
     for (let i = 0; i < matching.length; i++) {
@@ -199,7 +205,6 @@ function dutch() {
             continue;
         }
         if (matching[i] == -1) {
-            pairing.push({white: i, black: -1});
             continue;
         }
         if (players[matching[i]].color_streak > players[i]) {
@@ -208,6 +213,7 @@ function dutch() {
         }
         pairing.push({white: matching[i], black: i});
         matched.add(matching[i]);
+        matched.add(i);
     }
     return matched;
 }
