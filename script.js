@@ -24,10 +24,10 @@ for (const tournament of tournaments) {
     div.setAttribute('class', 'tournament');
     div.innerHTML = `<div style="flex: 1"><a href="/stats.html?tournament=${encodeURIComponent(tournament.name)}">${tournament.name}</a><div>`;
     if (tournament.status == 'active') {
-        div.innerHTML += `<div style="color: green; width: 50px;">Идёт</div>`;
+        div.innerHTML += `<div style="color: green; width: 60px;">Идёт</div>`;
     }
     else {
-        div.innerHTML += `<div style="color: gray"; width: 50px;>Завершён</div>`;
+        div.innerHTML += `<div style="color: gray"; width: 60px;>Завершён</div>`;
     }
     div.appendChild(remove_button);
     li.appendChild(div);
