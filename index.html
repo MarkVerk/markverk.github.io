@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,21 +7,28 @@
         <link rel="stylesheet" href="style.css">
     </head>
     <body>
-        <ol id="tournaments">
-        </ol>
-        <br>
-        <div class="tournament_parameters">
-            <label for="tournament_name">Название</label>
-            <input id="tournament_name" type="text"></input>
-            <table border="2" id="players_table">
-                <caption>Игроки</caption>
-                <tr>
-                    <th>Имя<button onclick="newPlayer()" style="font-size: 20px; border: 0; outline: none; background-color:transparent">+</button></th>
-                    <th>Рейтинг</th>
-                </tr>
-            </table>
-            <button onclick="pairingResults()" class="submit_button">Готово</button>
-        </div>
+        <header>
+            <h1 align="center">Главная</h1>
+            <div class="welcome">
+                <article>
+                   <p>Добро пожаловать на сайт для организации шахматных турниров. Это главная страница, на ней будут отображаться все ваши турниры.
+                    Жеребьёвка проводится с помошью швейцарской системы. Этот сайт экспериментален, планируются дальнейшие работы по улучшению его функционала.
+                   </p>
+                </article>
+            </div>
+        </header>
+        <br><br>
+        <main>
+            <section>
+                <label for="tournaments"><h3 align="center">Список турниров</h3></label>
+                <div class="tournaments">
+                    <ul style="list-style-type: none; padding: 0; margin: 0;" id="tournaments">
+                    </ul>
+                </div>
+            </section>
+            <br>
+            <button onclick="location.href = '/new_tournament.html'">Создать турнир</button>
+        </main>
         <script src="script.js"></script>
     </body>
 </html>

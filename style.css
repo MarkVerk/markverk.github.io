@@ -1,3 +1,16 @@
+.welcome {
+  font-family: 'Times New Roman', Times, serif;
+  font-size: large
+}
+
+
+.tournament {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+}
+
+
 table {
     font-family: arial, sans-serif;
     border-collapse: collapse;

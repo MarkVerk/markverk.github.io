@@ -6,6 +6,14 @@ const player_games_table = document.getElementById('player_games');
 
 
 document.getElementById('rounds_link').href = `/swiss.html?tournament=${tournament_name}&round=1`;
+document.getElementById('header_text').innerHTML = `Результаты турнира "${tournament_name}"<br>`;
+
+if (tournament.status == 'active') {
+    document.getElementById('header_text').innerHTML += '<div style="color: green">Турнир идёт</div>';
+}
+else {
+    document.getElementById('header_text').innerHTML += '<div style="color: gray">Турнир завершён</div>';
+}
 
 const show_player = params.get('player');
 

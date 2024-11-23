@@ -7,6 +7,10 @@ if (tournaments == null) {
     tournaments = [];
 }
 
+if (tournaments.length == 0) {
+    document.querySelector('.tournaments').innerHTML = '<i>Здесь пока нет турниров</i>';
+}
+
 for (const tournament of tournaments) {
     const li = document.createElement('li');
     const remove_button = document.createElement('button');
@@ -14,49 +18,18 @@ for (const tournament of tournaments) {
     remove_button.addEventListener('click', function () {
         tournaments.splice(tournaments.indexOf(tournament), 1);
         localStorage.setItem('tournaments', JSON.stringify(tournaments));
-        li.remove();
+        location.reload();
     });
-    li.innerHTML = `<a href="/stats.html?tournament=${encodeURIComponent(tournament.name)}">${tournament.name}</a>`;
-    li.appendChild(remove_button);
+    const div = document.createElement('div');
+    div.setAttribute('class', 'tournament');
+    div.innerHTML = `<div style="flex: 1"><a href="/stats.html?tournament=${encodeURIComponent(tournament.name)}">${tournament.name}</a><div>`;
+    if (tournament.status == 'active') {
+        div.innerHTML += `<div style="color: green; width: 50px;">Идёт</div>`;
+    }
+    else {
+        div.innerHTML += `<div style="color: gray"; width: 50px;>Завершён</div>`;
+    }
+    div.appendChild(remove_button);
+    li.appendChild(div);
     tournament_list.appendChild(li);
-}
-
-function hasDuplicates(players) {
-    let taken = new Set();
-    for (let i = 0; i < players.length; i++) {
-        if (taken.has(players[i].name)) {
-            return true;
-        }
-        taken.add(players[i].name);
-    }
-    return false;
-}
-
-function pairingResults() {
-    let players = [];
-    for (let i = 0; i < player_names.length; i++) {
-        players.push({name: player_names[i].value, rating: Number(player_ratings[i].value)});
-    }
-    if (players.length < 2) {
-        alert('Player count must be at least 2');
-        return;
-    }
-    if (hasDuplicates(players)) {
-        alert('Player names must be unique');
-        return;
-    }
-    tournaments.push({players: players, games: [], status: 'active', name: document.getElementById('tournament_name').value});
-    localStorage.setItem('tournaments', JSON.stringify(tournaments));
-    location.href = `/swiss.html?tournament=${encodeURIComponent(document.getElementById('tournament_name').value)}&round=1`;
-}
-
-function removePlayer(that) {
-    that.parentNode.parentNode.remove();
-}
-
-function newPlayer() {
-    const players_table = document.getElementById('players_table');
-    const row = players_table.insertRow();
-    row.insertCell().innerHTML = '<button onclick="removePlayer(this)" style="font-size: 20px; border: 0; outline: none; background-color:transparent">-</button><input name="player_name" type="text" style="font-size: 16px; border: 0; outline: none; width: 80%">';
-    row.insertCell().innerHTML = '<input name="player_rating" type="number" style="font-size: 16px; border: 0; outline: none; width: 100%">';
 }
