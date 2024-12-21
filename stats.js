@@ -2,7 +2,7 @@ const tournaments = JSON.parse(localStorage.getItem('tournaments'));
 const params = new URLSearchParams(location.search);
 const tournament_name = decodeURIComponent(params.get('tournament'));
 let tournament = tournaments.find((a) => a.name == tournament_name);
-const player_games_table = document.getElementById('player_games');
+const player_info = document.getElementById('player info');
 
 
 document.getElementById('rounds_link').href = `/swiss.html?tournament=${tournament_name}&round=1`;
@@ -35,8 +35,8 @@ for (let i = 0; i < tournament.games.length; i++) {
                 tournament.players[game.black].losses++;
                 tournament.players[game.white].total_opponent_rating += tournament.players[game.black].rating;
                 tournament.players[game.black].total_opponent_rating += tournament.players[game.white].rating;
-                tournament.players[game.white].history.push({opponent: game.black, result: 'W'});
-                tournament.players[game.black].history.push({opponent: game.white, result: 'L'});
+                tournament.players[game.white].history.push({color: 1, opponent: game.black, result: 'W'});
+                tournament.players[game.black].history.push({color: 0, opponent: game.white, result: 'L'});
                 tournament.players[game.white].scores.set(game.black, 1);
                 tournament.players[game.black].scores.set(game.white, 0);
                 break;
@@ -45,8 +45,8 @@ for (let i = 0; i < tournament.games.length; i++) {
                 tournament.players[game.black].wins++;
                 tournament.players[game.white].total_opponent_rating += tournament.players[game.black].rating;
                 tournament.players[game.black].total_opponent_rating += tournament.players[game.white].rating;
-                tournament.players[game.white].history.push({opponent: game.black, result: 'L'});
-                tournament.players[game.black].history.push({opponent: game.white, result: 'W'});
+                tournament.players[game.white].history.push({color: 1, opponent: game.black, result: 'L'});
+                tournament.players[game.black].history.push({color: 0, opponent: game.white, result: 'W'});
                 tournament.players[game.white].scores.set(game.black, 0);
                 tournament.players[game.black].scores.set(game.white, 1);
                 break;
@@ -55,8 +55,8 @@ for (let i = 0; i < tournament.games.length; i++) {
                 tournament.players[game.black].draws++;
                 tournament.players[game.white].total_opponent_rating += tournament.players[game.black].rating;
                 tournament.players[game.black].total_opponent_rating += tournament.players[game.white].rating;
-                tournament.players[game.white].history.push({opponent: game.black, result: 'D'});
-                tournament.players[game.black].history.push({opponent: game.white, result: 'D'});
+                tournament.players[game.white].history.push({color: 1, opponent: game.black, result: 'D'});
+                tournament.players[game.black].history.push({color: 0, opponent: game.white, result: 'D'});
                 tournament.players[game.white].scores.set(game.black, 0.5);
                 tournament.players[game.black].scores.set(game.white, 0.5);
                 break;
@@ -72,27 +72,71 @@ for (let i = 0; i < tournament.games.length; i++) {
 }
 
 if (show_player) {
-    player_games_table.caption.firstChild.innerHTML = tournament.players[Number(show_player)].name;
-    player_games_table.caption.innerHTML += `<a href="/stats.html?tournament=${tournament_name}">Скрыть</a>`;
-    for (const game of tournament.players[Number(show_player)].history) {
+    const player = tournament.players[show_player];
+    let tbody = '';
+    for (const game of player.history) {
         if (game.result == 'B') {
+            tbody += `
+            <tr>
+                <td>${player.name}</td>
+                <td>1 - </td>
+                <td></td>
+            </tr>
+            `;
             continue;
         }
-        const newRow = player_games_table.insertRow();
-        newRow.insertCell().innerHTML = tournament.players[game.opponent].name;
-        switch (game.result) {
-            case 'W':
-                newRow.insertCell().innerHTML = 'Победа';
-                break;
-            case 'L':
-                newRow.insertCell().innerHTML = 'Поражение';
-                break;
-            case 'D':
-                newRow.insertCell().innerHTML = 'Ничья';
-                break;
+        if (game.color == 1) {
+            switch (game.result) {
+                case 'W':
+                    result = '1 - 0';
+                    break;
+                case 'L':
+                    result = '0 - 1';
+                    break;
+                case 'D':
+                    result = '½ - ½';
+                    break;
+            }
+            tbody += `
+                <tr>
+                    <td>${player.name}</td>
+                    <td>${result}</td>
+                    <td>${tournament.players[game.opponent].name}</td>
+                </tr>
+            `;
+        }
+        else {
+            switch (game.result) {
+                case 'W':
+                    result = '0 - 1';
+                    break;
+                case 'L':
+                    result = '1 - 0';
+                    break;
+                case 'D':
+                    result = '½ - ½';
+                    break;
+            }
+            tbody += `
+                <tr>
+                    <td>${tournament.players[game.opponent].name}</td>
+                    <td>${result}</td>
+                    <td>${player.name}</td>
+                </tr>
+            `;
         }
     }
-    player_games_table.hidden = false;
+    player_info.innerHTML = `
+    <h3>${player.name}</h3>
+    <table border="2">
+    <tr>
+        <th>Белые</th>
+        <th>Результат</th>
+        <th>Черные</th>
+    <tr>
+    ${tbody}
+    </table>
+    `;
 }
 
 let tableHead = `
